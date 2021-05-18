@@ -5,6 +5,8 @@ import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -29,11 +31,12 @@ public class BDDTestWeatherApi {
     }
 
     @Test
-    @DisplayName("Погода в лондоне")
-        //https://api.weatherapi.com/v1/current.json?key=4d85be9d306a41e099161606211805&q=London&aqi=no
+    @DisplayName("Погода в лондоне на 1 день")
+
+    //https://api.weatherapi.com/v1/forecast.json?key=4d85be9d306a41e099161606211805&q=London&days=1&aqi=no&alerts=no
     void London() {
         given().spec(spec)
-                .when().get("current.json?q=London&aqi=no")
+                .when().get("forecast.json?q=London&days=1aqi=noalerts=no")
                 .then()
                 .statusCode(200).log().all();
 

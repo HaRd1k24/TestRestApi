@@ -3,6 +3,7 @@ package newsapi;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.Assertions;
@@ -43,11 +44,11 @@ public class BDDTest {
     @Test
     @DisplayName("Статьи с упоминанием Apple за вчерашний день")
     public void stateApple() {
-
-        given().spec(spec)
-
+    given().spec(spec)
                 .when().get("?q=apple&from=2021-05-17&to=2021-05-17&sortBy=popularity")
                 .then().statusCode(200).log().all();
+
+
     }
 
     @Test
