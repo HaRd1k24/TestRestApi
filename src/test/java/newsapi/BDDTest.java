@@ -6,12 +6,16 @@ import io.restassured.filter.log.LogDetail;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static io.restassured.RestAssured.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import static io.restassured.RestAssured.given;
 
 public class BDDTest {
 
@@ -22,31 +26,44 @@ public class BDDTest {
     static void setUp() {
         RequestSpecBuilder builder = new RequestSpecBuilder();
         builder
-                .setBaseUri("https://newsapi.org/v2/everything")
+                .setBaseUri("https://newsapi.org/")
+                .setBasePath("v2/everything")
                 .addQueryParam("apiKey", API_KEY)
                 .log(LogDetail.ALL);
 
         spec = builder.build();
     }
 
-    //https://newsapi.org/v2/everything?q=tesla&from=2021-04-18&sortBy=publishedAt&apiKey=82edc87933e14dc38b65bc307bc86b33
+
     @Test
     @DisplayName("Статьи теслы за послдений месяц")
-    void simpleTest() {
+    void stateTeslaOnMonth() {
+        String str = "https://newsapi.org/v2/everything?q=tesla&from=2021-04-19&sortBy=publishedAt&apiKey=82edc87933e14dc38b65bc307bc86b33";
 
-        given().spec(spec)
-                .when().get("?q=tesla&from=2021-04-18&sortBy=publishedAt")
-                .then().statusCode(200).log().all();
+        Response response = RestAssured.given().spec(spec)
+                .queryParam("sortBy", "publishedAt")
+                .when().get("?q=tesla");
 
+        JsonPath jsonPath = response.jsonPath();
+
+        List<String> list = new ArrayList<>(jsonPath.get("articles"));
+        System.out.println(list);
+        // Assertions.assertTrue(list.contains("a"));
 
     }
+
 
     @Test
     @DisplayName("Статьи с упоминанием Apple за вчерашний день")
     public void stateApple() {
-    given().spec(spec)
-                .when().get("?q=apple&from=2021-05-17&to=2021-05-17&sortBy=popularity")
-                .then().statusCode(200).log().all();
+        Response response = RestAssured.given().spec(spec)
+                .queryParam("sortBy", "popularity")
+                .when().get("?q=apple");
+
+        JsonPath jsonPath = response.jsonPath();
+        System.out.println(jsonPath.get("status").toString());
+        String str = jsonPath.get("status");
+        Assertions.assertTrue(str.contains("ok"));
 
 
     }
@@ -56,30 +73,10 @@ public class BDDTest {
     void articleBitcoin() {
 
         String str = "https://newsapi.org/v2/everything?q=bitcoin&apiKey=82edc87933e14dc38b65bc307bc86b33";
-       given().spec(spec)
-               .when().get("?q=bitcoin")
-               .then()
-               .statusCode(200).log().headers();
-
-        // Устанавливаем базовый адрес запроса
-        RestAssured.baseURI = str;
-
-        // Получить объект HTTP-запроса
-        RequestSpecification httpRequest = RestAssured.given();
-
-        // Получаем ответное сообщение
-        Response response = httpRequest.get(String.valueOf(spec));
-
-        // Получить server из заголовка сообщения, возвращаемого сервером, и проверить его
-        String server = response.header("Server");
-
-        Assertions.assertEquals(server, "cloudflare");
-
-
-
-
-
-
+        given().spec(spec)
+                .when().get("?q=bitcoin")
+                .then().log().all()
+                .header("Server", Matchers.equalTo("cloudflare"));
 
 
     }
