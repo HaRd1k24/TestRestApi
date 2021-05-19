@@ -39,14 +39,19 @@ public class BDDTestWeatherApi {
 
         //https://api.weatherapi.com/v1/forecast.json?key=4d85be9d306a41e099161606211805&q=London&days=1&aqi=no&alerts=no
     void London() {
-        Response response = RestAssured.given().spec(spec).log().all()
-                .when().get("forecast.json?q=London&days=1aqi=noalerts=no");
+        Response response = RestAssured.given().spec(spec)
+                .queryParam("q", "London")
+                .queryParam("days", "1")
+                .queryParam("aqi", "no")
+                .queryParam("alerts", "no")
+                .get("forecast.json");
+
 
         JsonPath jsonPath = response.jsonPath();
 
 
-        List<String> list = new ArrayList<>(jsonPath.get("location"));
-        System.out.println(list);
+//        List<String> list = new ArrayList<>(jsonPath.get("location"));
+     //   System.out.println(list);
 
 
     }
@@ -74,7 +79,11 @@ public class BDDTestWeatherApi {
     void weatherForecast() {
         String Str = "https://api.weatherapi.com/v1/forecast.json?key=4d85be9d306a41e099161606211805&q=Russia&days=1&aqi=no&alerts=no";
         given().spec(spec).when()
-                .get("forecast.json?q=Russia&days=1aqi=noalerts=no")
+                .queryParam("q", "Russia")
+                .queryParam("days", "1")
+                .queryParam("aqi", "no")
+                .queryParam("alerts", "no")
+                .get("forecast.json")
                 .then()
                 .header("Content-Type", Matchers.equalTo("application/json"));
 

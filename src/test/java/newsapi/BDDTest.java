@@ -19,7 +19,7 @@ import static io.restassured.RestAssured.given;
 
 public class BDDTest {
 
-    public static final String API_KEY = "82edc87933e14dc38b65bc307bc86b33";
+    public static final String API_KEY = "82edc8x7933e14dc38b65bc307bc86b33";
     public static RequestSpecification spec;
 
     @BeforeAll
@@ -57,6 +57,7 @@ public class BDDTest {
     @DisplayName("Статьи с упоминанием Apple за вчерашний день")
     public void stateApple() {
         Response response = RestAssured.given().spec(spec)
+
                 .queryParam("sortBy", "popularity")
                 .when().get("?q=apple");
 
@@ -72,9 +73,9 @@ public class BDDTest {
     @DisplayName("Все статьи о биткойнах")
     void articleBitcoin() {
 
-        String str = "https://newsapi.org/v2/everything?q=bitcoin&apiKey=82edc87933e14dc38b65bc307bc86b33";
+      //  String str = "https://newsapi.org/v2/everything?q=bitcoin&apiKey=82edc87933e14dc38b65bc307bc86b33";
         given().spec(spec)
-                .when().get("?q=bitcoin")
+                .when().get("q=bitcoin")
                 .then().log().all()
                 .header("Server", Matchers.equalTo("cloudflare"));
 
