@@ -57,8 +57,6 @@ public class BDDTest {
                 .queryParam("to", "2021-05-18")
                 .queryParam("sortBy", "popularity")
                 .when().get("?q=apple");
-        //https://newsapi.org/v2/everything?q=apple&from=2021-05-18&to=2021-05-18&
-        // sortBy=popularity&apiKey=82edc87933e14dc38b65bc307bc86b33
 
         JsonPath jsonPath = response.jsonPath();
 

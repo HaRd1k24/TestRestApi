@@ -36,8 +36,6 @@ public class BDDTestWeatherApi {
 
     @Test
     @DisplayName("Погода в лондоне на 1 день")
-
-        //https://api.weatherapi.com/v1/forecast.json?key=4d85be9d306a41e099161606211805&q=London&days=1&aqi=no&alerts=no
     void London() {
         Response response = RestAssured.given().spec(spec)
                 .queryParam("q", "London")
@@ -46,13 +44,9 @@ public class BDDTestWeatherApi {
                 .queryParam("alerts", "no")
                 .get("forecast.json");
 
-
         JsonPath jsonPath = response.jsonPath();
-
-
-//        List<String> list = new ArrayList<>(jsonPath.get("location"));
-     //   System.out.println(list);
-
+        String str = jsonPath.get("location.name");
+        Assertions.assertEquals(str,"London");
 
     }
 
@@ -63,14 +57,9 @@ public class BDDTestWeatherApi {
                 queryParams("q", "Russia").log().all()
                 .when().get("sports.json");
 
-
-        //  https://api.weatherapi.com/v1/sports.json?key=4d85be9d306a41e099161606211805&q=Russia
-
         JsonPath jsonPath = response.jsonPath();
-        List<String> list = new ArrayList<String>(jsonPath.get("football"));
-
-        System.out.println(list);
-        // Assertions.assertTrue(list.contains("stadium"));
+        List<String> list = new ArrayList<String>(jsonPath.get("golf.stadium"));
+        Assertions.assertNotNull(list);
 
     }
 
@@ -86,7 +75,5 @@ public class BDDTestWeatherApi {
                 .get("forecast.json")
                 .then()
                 .header("Content-Type", Matchers.equalTo("application/json"));
-
-
     }
 }
